@@ -23,6 +23,7 @@ class Model(Chain):
         return self.fc2(h)
 
 model = L.Classifier(Model())
+model.to_gpu()
 optimizer = optimizers.MomentumSGD(lr=0.01, momentum=0.9)
 optimizer.setup(model)
 
@@ -34,7 +35,7 @@ def cov(batch, batchsize):
     for j in range(batchsize):
         x.append(batch[j][0])
         t.append(batch[j][1])
-    return Variable(cupy.asarray(x)), Variable(cupy.asarray(t))
+    return Variable(cupy.asarray(x, dtype=cupy.float32)), Variable(cupy.asarray(t, dtype=cupy.float32))
 
 for n in range(20):
     for i in chainer.iterators.SerialIterator(train, batchsize, repeat = False):
