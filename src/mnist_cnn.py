@@ -1,4 +1,4 @@
-import numpy as np
+import cupy
 import chainer
 import chainer.functions as F
 import chainer.links as L
@@ -34,7 +34,7 @@ def cov(batch, batchsize):
     for j in range(batchsize):
         x.append(batch[j][0])
         t.append(batch[j][1])
-    return Variable(np.array(x)), Variable(np.array(t))
+    return Variable(cupy.asarray(x)), Variable(cupy.asarray(t))
 
 for n in range(20):
     for i in chainer.iterators.SerialIterator(train, batchsize, repeat = False):
