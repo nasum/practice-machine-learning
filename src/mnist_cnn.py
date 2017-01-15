@@ -35,7 +35,7 @@ def cov(batch, batchsize):
     for j in range(batchsize):
         x.append(batch[j][0])
         t.append(batch[j][1])
-    return Variable(cupy.asarray(x, dtype=cupy.float32)), Variable(cupy.asarray(t, dtype=cupy.float32))
+    return Variable(cupy.asarray(x)), Variable(cupy.asarray(t))
 
 for n in range(20):
     for i in chainer.iterators.SerialIterator(train, batchsize, repeat = False):
