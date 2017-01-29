@@ -25,6 +25,7 @@ def draw_digit(data):
     plt.show()
 
 print('training data')
-print(train.__class__.__name__)
+print(train[0][0][0][0])
+print(train[0][0][0][0].size)
 
 draw_digit(train[0][0][0])
