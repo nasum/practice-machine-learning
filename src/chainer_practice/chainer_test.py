@@ -25,7 +25,7 @@ def draw_digit(data):
     plt.show()
 
 print('training data')
-print(train[0][0][0][0])
-print(train[0][0][0][0].size)
-
-draw_digit(train[0][0][0])
+#print(train[0][0][0][0])
+#print(train[0][0][0][0].size)
+print(train[0])
+#draw_digit(train[0][0][0])
