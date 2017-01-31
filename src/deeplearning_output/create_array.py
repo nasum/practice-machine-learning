@@ -19,6 +19,6 @@ def create_array(path, vector):
         labelData.append(np.int32(vector))
 
     threshold = np.int32(len(imageData)/8*7)
-    train = tuple_dataset.TupleDataset(imageData[0:threshold], labelData[0:threshold])
+    train = tuple_dataset.TupleDataset(imageData, labelData)
 
     return train

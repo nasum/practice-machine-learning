@@ -4,7 +4,8 @@ import numpy as np
 import chainer
 import chainer.functions as F
 import chainer.links as L
-from chainer import Variable, optimizers, Chain
+from chainer import Variable, optimizers, Chain, training
+from chainer.training import extensions
 
 args = sys.argv
 
@@ -12,6 +13,9 @@ train_0, test_0 = chainer.datasets.get_mnist(ndim=3)
 
 train = ca.create_array(args[1],1)
 test = ca.create_array(args[2],0)
+
+print(train_0.__class__)
+print(train.__class__)
 
 class Model(Chain):
     def __init__(self):
@@ -40,32 +44,13 @@ optimizer.setup(model)
 
 batchsize = 56
 
-def cov(batch, batchsize):
-    x = []
-    t = []
-    for j in range(batchsize):
-        print(batch[j][0][0][0])
-        x.append(batch[j][0])
-        t.append(batch[j][1])
-    return Variable(np.array(x)), Variable(np.array(t))
+train_iter = chainer.iterators.SerialIterator(train, batchsize)
+test_iter = chainer.iterators.SerialIterator(test, batchsize,repeat=False, shuffle=False)
 
-for n in range(20):
-    for i in chainer.iterators.SerialIterator(train, batchsize, repeat = False):
-        x, t = cov(i, batchsize)
+updater = training.StandardUpdater(train_iter, optimizer)
+trainer = training.Trainer(updater, (20, 'epoch'))
 
-        # 勾配を０に
-        model.zerograds()
+trainer.extend(extensions.Evaluator(test_iter, model))
+trainer.extend(extensions.ProgressBar())
 
-        # 損失を計算
-        loss = model(x, t)
-
-        # 逆伝搬
-        loss.backward()
-
-        # 最適化関数の更新
-        optimizer.update()
-
-    i = chainer.iterators.SerialIterator(test, batchsize, repeat = False).next()
-    x,t = cov(i, batchsize)
-    loss = model(x, t)
-    print(n, loss.data)
+trainer.run()
